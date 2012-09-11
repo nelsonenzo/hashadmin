@@ -15,5 +15,5 @@ get '/' do
 end
 
 if ENV['RACK_ENV'] == "development"
-	require './admin'
+	require './hashadmin'
 end
