@@ -1,0 +1,53 @@
+I want to start a new sinatra application
+I want the project gemspace to be isolated
+I want the gemset to autoload when i enter this directory
+I want the the project on github
+	I want to share the project to others
+
+I want a postrgres development database created
+I want the the project deployed to heroku using postgres db
+
+
+I want an #opsadmin database to store
+	the heroku location - no - can query heroku for this
+	the gemset location - no - can query the .rvmrc
+
+
+git clone hashopsadmin
+** assuming the following are in my global gemspace **
+bundler
+sinatra - only gem decared in gemfile
+shotgun
+
+starter up
+shotgun start
+
+-find rubies
+-select ruby
+-create gemset
+-use gemset
+-create .rvmrc
+bundle install - should install gems in new gemspace
+(restart application ?)
+
+-git init, add, commit
+-github create, add origin, push, share
+
+#create postgres database for development
+- createdb project_dev_db_name --username postgres
+#likewise, to remove the database
+- dropdb project_debv_db_name --username postgres
+
+insert necessary code in sinatra application to use database
+insert necessary gems in Gemfile
+bundle install
+
+create migration
+run migration
+
+
+
+
+
+
+
