@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>#Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="admin pannel for dev">
+    <meta name="author" content="nelsonenzo">
+
+    <link href="/hashops/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/hashops/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/ha/ha.css" type="text/css" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+
+  </head>
+  <body>
+  	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">#Ops</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              Logged in as <a href="#" class="navbar-link">Username</a>
+            </p>
+            <ul class="nav">
+              <li><a href="/hashops">Home</a></li>
+              <li><a href="/hashops/rvm">RVM</a></li>
+              <li><a href="/hashops/git">Git</a></li>
+              <li><a href="/hashops/github">Github</a></li>
+              <li><a href="/hashops/database">Database</a></li>
+              <li><a href="/hashops/deploy">Deploy</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+  		<%= yield %>
+      <footer>
+        <p>&copy; Company 2012</p>
+      </footer>
+    </div><!--/.fluid-container-->
+
+  	<script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/hashops/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $(function(){
+        // highlight the top nav menu
+        path = document.location.pathname.split('#')[0]
+        $('a[href="'+path+'"]').parent().addClass('active')  
+        // highlight end
+      })
+    </script>
+          <script type="text/javascript">
+        jQuery(function(){
+          jQuery('a').click(function(){
+            req = this.href
+            jQuery.get(req, function(data){
+              console.log(data)
+              // response = JSON.parse(data);
+
+              jQuery('#log').html(data)
+            })
+            return false;
+          });
+        });
+      </script>
+
+  </body>
+</html>

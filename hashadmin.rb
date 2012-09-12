@@ -1,66 +1,100 @@
-## would be cool if there was a little admin database seperate from the 
-## project db to store project info - like the name of the gemset, heroku app name, etc.
-## maybe it's even a system database that has 'All Projects' info.
-## be wary of 'history' - you won't see other committers mods.
-## probably best to only save things related to this system or global to the world, like
-## heroku project name,etc.
-require 'octokit'
+####### OFFICIAL NAME: #Ops  hashops   ###########
+## domain is available, not a lot of google competition, kinda discriptive
 
-get '/rvm/rubies' do
-	`rvm list`
+## Rather than using backtics, I should probaly learn and use the real IO library
+## http://www.ruby-doc.org/core-1.9.3/IO.html#method-c-new
+
+require 'octokit'
+require 'json'
+
+get '/hashops' do
+	erb :"hashops/index", :layout => :"hashops/hashops_layout"
+end
+
+get '/hashops/rvm' do
+	erb :"hashops/rvm", :layout => :"hashops/hashops_layout"
+end
+
+get '/hashops/git' do
+	erb :"hashops/git", :layout => :"hashops/hashops_layout"
+end
+
+get '/hashops/github' do
+	erb :"hashops/github", :layout => :"hashops/hashops_layout"
+end
+
+get '/hashops/database' do
+	erb :"hashops/database", :layout => :"hashops/hashops_layout"
+end
+
+get '/hashops/deploy' do
+	erb :"hashops/deploy", :layout => :"hashops/hashops_layout"
+end
+
+
+get '/hashops/rvm/list' do
+	rubies = `rvm list`
+	content_type :json
+  	{:key1 => rubies}.to_json
 	# %x[rvm list] #does the same as above, but uglier! maybe useful if you ever need quotes.
 	#downside to both these is that it does not get stderr, just stdout.
 end
 
-get '/rvm/set_ruby' do
+get '/hashops/rvm/set_ruby' do
 	ver = 'ruby-1.9.2-p290'
-	result = %x[rvm #{ver}]
-	# crappy - this won't work.  maybe better luck with rbenv
-	result
+	#this did the trick bitches!
+	#see here if you want to know this hack:
+	# https://rvm.io/workflow/scripting/
+	`rvm #{ver} do rvm gemset create my_gemset`
+
 end
 
-get '/gem/install/:gem' do
+get '/hashops/rvm/create_rvmrc' do
+	# write out a template file with the appropriate gemset to use.
+end
+
+get '/hashops/gem/install/:gem' do
 	`gem install #{params[:gem]}`
 end
 
-get '/gem/bundle/install' do
+get '/hashops/gem/bundle/install' do
 	`bundle install`
 end
 
-get '/git/init' do
+get '/hashops/git/init' do
 	`git init`
 end
 
-get '/git/add_all' do
+get '/hashops/git/add_all' do
 	`git add *`
 end
 
-get '/git/commit_1' do
+get '/hashops/git/commit_1' do
 	`git commit -m "first commit"`
 end
 
-get '/git/commit/any/:message' do
+get '/hashops/git/commit/any/:message' do
 	#git quick commit of any changes that have been made - this is dangerous.
 end
 
-get '/git/github/create' do
+get '/hashops/git/github/create' do
 	#create the gitub repo
 end
 
-post '/git/github/share' do
+post '/hashops/git/github/share' do
 	#using github api, share to git usernames/email addresses
 end
 
-get '/heroku/sign_in' do
+get '/hashops/heroku/sign_in' do
 	#multi part step, if at all possible, probably need one of the fancier
 	#io options.  check out http://tech.natemurray.com/2007/03/ruby-shell-commands.html
 end
 
-get '/heroku/create' do
+get '/hashops/heroku/create' do
 	`heroku create`
 end
 
-get '/heroku/deploy' do
+get '/hashops/heroku/deploy' do
 	`git push heroku master`
 	# it worked, but i think one of those instances it took more than 60 seconds.
 	# should probably find a snazzy way to timestamp incoming requests
@@ -69,17 +103,45 @@ get '/heroku/deploy' do
 	# process that will fetch the response, whenever it is eventually ready. 
 end
 
-get '/migration/create/:name' do
+get '/hashops/deploy/elsewhere' do
+	# do a google search for:
+	# what does capify! do
+	# to see a variety of capistrano generating gems
+	# for deploying to other places.
+end
+
+get '/hashops/migration/create/:name' do
 	`rake db:create_migration NAME=#{params[:name]}`
 end
 
 # #post
-get '/github/create_repo/:name' do
+get '/hashops/github/create_repo/:name' do
 	client = Octokit::Client.new(:login => params[:username], :password => params[:password])
 	client.create_repository(params[:name])
 end
 
-get '/github/push_repo/:name' do
+get '/hashops/github/push_repo/:name' do
 	`git remote add origin git@github.com:nelsonenzo/hashadmin.git`
 	`git push -u origin master`
 end
+
+get '/hashops/gem/add/:gemname' do
+	append_file "./Gemfile", "\ngem '#{params[:gemname]}'\n"
+	"hi" #need to return something here that is not 
+end
+
+def append_file(dest,data)
+	path = dest
+	data = "#{data}"
+	File.open(path, 'a+') {|file| file.write(data)}
+	# see http://stackoverflow.com/questions/1581674/differences-between-ruby-file-access-mode-r-and-w
+end
+
+## Additional Feature Possibilites
+
+## would be cool if there was a little admin database seperate from the 
+## project db to store project info - like the name of the gemset, heroku app name, etc.
+## maybe it's even a system database that has 'All Projects' info.
+## be wary of 'history' - you won't see other committers mods.
+## probably best to only save things related to this system or global to the world, like
+## heroku project name,etc.
