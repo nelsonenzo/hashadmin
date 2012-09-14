@@ -1,70 +1,105 @@
+<script type="text/javascript">
+$(function(){
+  $('a.cc').click(function(){
+    try{
+      var req = this.href;
+      var cb = $(this).attr('cb');
+      $.get(req, function(data){
+        // new div hero class
+          var sent_p = document.createElement('p');
+          sent_p.setAttribute('class','command_sent');
+          sent_p.appendChild(document.createTextNode(data.command_sent));
+
+          var rec_p = document.createElement('pre');
+          rec_p.setAttribute('class','console_response');
+          rec_p.appendChild(document.createTextNode(data.console_response));
+
+          var div = document.createElement('div');
+          div.setAttribute('class', 'hero-unit tofadein');
+
+          div.appendChild(sent_p);
+          div.appendChild(rec_p);
+          // div.prepend(rec_p);
+          // div.prepend(sent_p);
+          
+          // div.insertBefore(rec_p,div.firstChild);
+          // div.insertBefore(sent_p, div.firstChild);
 
 
-      <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Sidebar</li>
-              <li class="active"><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li class="nav-header">Sidebar</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li class="nav-header">Sidebar</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-            </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
-        <div class="span9">
-          <div class="hero-unit">
-            <h1>Hello, world!</h1>
-            <div id="log"></div>
-            <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-            <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-          </div>
-          <div class="row-fluid">
-            <div class="span4">
-              <h2>List Rubies</h2>
-              <p>rvm list</p>
-              <p><a class="btn btn-primary" href="/hashops/rvm/list">Run &raquo;</a></p>
-            </div><!--/span-->
-            <div class="span4">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn" href="#">View details &raquo;</a></p>
-            </div><!--/span-->
-            <div class="span4">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn" href="#">View details &raquo;</a></p>
-            </div><!--/span-->
-          </div><!--/row-->
-          <div class="row-fluid">
-            <div class="span4">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn" href="#">View details &raquo;</a></p>
-            </div><!--/span-->
-            <div class="span4">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn" href="#">View details &raquo;</a></p>
-            </div><!--/span-->
-            <div class="span4">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn" href="#">View details &raquo;</a></p>
-            </div><!--/span-->
-          </div><!--/row-->
-        </div><!--/span-->
-      </div><!--/row-->
+          $('#jconsole').prepend(div);
+          $(div).slideDown('slow').fadeIn('slow');
 
-      <hr>
+          // scroll_to_bottom('jconsole');
+
+          if(data.formated_response){
+            window[cb](data.formated_response);
+          }
+      });
+    } catch(e){
+      console.log(e)
+    }
+
+  return false;
+  });
+});
+
+function scroll_to_bottom(div_id){
+  var objDiv = document.getElementById(div_id);
+  objDiv.scrollTop = objDiv.scrollHeight;
+}
+
+function select_ruby(formated_response){
+        $('#log').html('')
+      $.each(formated_response,function(i,e){
+        $('#log').prepend("<label>"+e.ruby+"</label><input type='radio' name='which_ruby' value='"+e.ruby+"'/><br/>")  
+      });
+}
+</script>
+
+<div class="row-fluid">
+  <div class="span6">
+    <div class="row">
+      <h2>List Rubies</h2>
+      <p>rvm list</p>
+      <p><a class="btn btn-primary cc" 
+            href="/hashops/rvm/list" 
+            cb="select_ruby">Run &raquo;</a></p>
+    </div><!--/row-->
+    <div class="row list-rubies">
+      <p id="log"></p>
+    </div><!--/row-->
+  
+  </div><!--/span-->
+
+  <div class="span6">
+    <div class="row">
+      <form action="/hashops/any_command/" method="post">
+        <fieldset>
+          <input type="text" name="command"><input type="submit" class="button">
+        </fieldset>
+      </form>
+    </div>
+    <div class="row">
+      <div id="jconsole">
+        <div class="hero-unit">
+          <p class='command_sent'>You Ran:</p>
+          <p class='received_back'>Received Back:</p>
+        </div>
+      </div>
+    </div>
+  </div><!--/span6-->
+</div><!--/row-->
+
+<hr>
+<style type="text/css">
+fieldset{margin:10px 0;}
+label{display:inline-block; margin:0 10px;}
+.hero-unit{padding:10px;margin:5px;}
+#jconsole {
+    max-height:800px;
+    overflow-y:auto;
+}
+.tofadein{
+  display:none;
+}
+</style>

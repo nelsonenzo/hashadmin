@@ -6,9 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="admin pannel for dev">
     <meta name="author" content="nelsonenzo">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/hashops/bootstrap/js/bootstrap.min.js"></script>
 
     <link href="/hashops/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/hashops/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/hashops/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/ha/ha.css" type="text/css" />
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -58,8 +60,7 @@
       </footer>
     </div><!--/.fluid-container-->
 
-  	<script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="/hashops/bootstrap/js/bootstrap.min.js"></script>
+
     <script type="text/javascript">
       $(function(){
         // highlight the top nav menu
@@ -68,20 +69,7 @@
         // highlight end
       })
     </script>
-          <script type="text/javascript">
-        jQuery(function(){
-          jQuery('a').click(function(){
-            req = this.href
-            jQuery.get(req, function(data){
-              console.log(data)
-              // response = JSON.parse(data);
 
-              jQuery('#log').html(data)
-            })
-            return false;
-          });
-        });
-      </script>
 
   </body>
 </html>

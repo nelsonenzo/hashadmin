@@ -33,9 +33,28 @@ end
 
 
 get '/hashops/rvm/list' do
-	rubies = `rvm list`
+	command_sent = 'rvm list'
+	console_response = `rvm list`
+	rubies = console_response.split("\n").reject{|r| !r.match(/.*ruby.*[0-9]+.*/) }
+	rubies.map! do |r|
+		status = case r
+		when r.include?('=>')
+			"current"
+		when r.include?('=*')
+			"current_and_default"
+		when r.include?('*')
+			"default"
+		else
+			""
+		end
+		ruby = r.gsub(/ \[.*\]/,'').gsub(/[=>*]/,'').strip
+		{'ruby'=>ruby, 'status'=>status}
+	end
+	[{:ruby_version => "ruby-1.8.7-p334", :status => ""||"c"||"candd"||"d"}]
 	content_type :json
-  	{:key1 => rubies}.to_json
+  	{:command_sent => command_sent, 
+  		:console_response => console_response,
+  		:formated_response => rubies}.to_json
 	# %x[rvm list] #does the same as above, but uglier! maybe useful if you ever need quotes.
 	#downside to both these is that it does not get stderr, just stdout.
 end
