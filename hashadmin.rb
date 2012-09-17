@@ -38,19 +38,14 @@ get '/hashops/rvm/list' do
 	rubies = console_response.split("\n").reject{|r| !r.match(/.*ruby.*[0-9]+.*/) }
 	rubies.map! do |r|
 		status = case r
-		when r.include?('=>')
-			"current"
-		when r.include?('=*')
-			"current_and_default"
-		when r.include?('*')
-			"default"
-		else
-			""
-		end
+			when r.include?('=>')	"current"
+			when r.include?('=*')	"current_and_default"
+			when r.include?('*')	"default"
+			else ""
+			end
 		ruby = r.gsub(/ \[.*\]/,'').gsub(/[=>*]/,'').strip
 		{'ruby'=>ruby, 'status'=>status}
 	end
-	[{:ruby_version => "ruby-1.8.7-p334", :status => ""||"c"||"candd"||"d"}]
 	content_type :json
   	{:command_sent => command_sent, 
   		:console_response => console_response,
@@ -60,12 +55,15 @@ get '/hashops/rvm/list' do
 end
 
 get '/hashops/rvm/set_ruby' do
-	ver = 'ruby-1.9.2-p290'
-	#this did the trick bitches!
-	#see here if you want to know this hack:
+	ver = params[:version]
+	name = params[:gemset_name]
+	command_sent = "rvm #{ver} do rvm gemset create #{name}"
+	# The trick to operating rvm from io:
 	# https://rvm.io/workflow/scripting/
-	`rvm #{ver} do rvm gemset create my_gemset`
-
+	console_response = `#{command_sent}`
+	content_type :json
+		{:command_sent => command_sent, 
+			:console_response => console_response}.to_json
 end
 
 get '/hashops/rvm/create_rvmrc' do
